@@ -1,0 +1,49 @@
+.App {
+}
+
+.AppHeader {
+  min-height: 100vh;
+}
+
+.AppTitle {
+  text-align: center;
+  font-family: Muli-4n, Muli, Helvetica, Arial, sans-serif;
+  color: #7f8c8d;
+}
+
+
+.ProductGroupContainer {
+  height: 480px;
+  transition: all 0.4s ease-in-out;
+}
+
+.ProductGroupContainer:hover {
+  cursor: pointer;
+  background-color: #7f8c8d;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
+}
+
+.ProductGroupContainer:hover img {
+  -webkit-transform: perspective(1px) translate3d(0, 0, 0) scale3d(1.1, 1.1, 1);
+  -ms-transform: perspective(1px) translate3d(0, 0, 0) scale3d(1.1, 1.1, 1);
+  transform: perspective(1px) translate3d(0, 0, 0) scale3d(1.1, 1.1, 1);
+}
+
+.ProductGroupImageContainer {
+  top: 0;
+  left: 0;
+  margin: 0;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.ProductGroupImage {
+  transition: all 0.4s cubic-bezier(0.485, 1.65, 0.545, 0.835);
+}
+
+.ProductGroupTitle {
+  height: 48px;
+  font-size: 12px;
+}
