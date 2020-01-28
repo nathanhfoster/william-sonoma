@@ -1,6 +1,8 @@
 import axios from "axios"
 
-const BASE_URL = "http://localhost:3000/"
+const { REACT_APP_API_URL } = process.env
+
+const BASE_URL = REACT_APP_API_URL || "http://localhost:3000/"
 
 const base = {
   Accept: "application/json"
