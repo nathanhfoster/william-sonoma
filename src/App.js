@@ -110,12 +110,14 @@ class App extends PureComponent {
             }
           >
             <BasicCarousel
-              images={images.map(image => ({
-                src: image.href,
-                altText: image.alt,
-                height: image.height,
-                width: image.width
-              }))}
+              images={[{ src: href, altText: alt, height, width }].concat(
+                images.map(image => ({
+                  src: image.href,
+                  altText: image.alt,
+                  height: image.height,
+                  width: image.width
+                }))
+              )}
             />
           </BasicModal>
         </Col>

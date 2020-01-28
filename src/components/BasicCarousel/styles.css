@@ -1,28 +1,16 @@
 .carousel {
-  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.carousel a {
+  transition: all 0.4s ease-in-out;
+  background-color: rgb(127, 140, 141, 0.2);
+}
+
+.carousel a:hover {
+  background-color: rgb(127, 140, 141, 1);
 }
 
 .carousel-item,
 .carousel-item.active {
   text-align: center;
 }
-
-/* 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  position: absolute;
-  top: calc(50% - 67px);
-  background-image: none;
-}
-
-.carousel-control-next-icon:after {
-  content: ">";
-  font-size: 56px;
-  color: #7f8c8d;
-}
-
-.carousel-control-prev-icon:after {
-  content: "<";
-  font-size: 56px;
-  color: #7f8c8d;
-} */
