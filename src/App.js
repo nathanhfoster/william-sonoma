@@ -1,7 +1,18 @@
 import React, { PureComponent } from "react"
 import PropTypes from "prop-types"
 import { connect as reduxConnect } from "react-redux"
-import { Container, Row, Col, Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from "reactstrap"
+import {
+  Container,
+  Row,
+  Col,
+  Badge,
+  Card,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle
+} from "reactstrap"
 import BasicModal from "./components/BasicModal"
 import BasicCarousel from "./components/BasicCarousel"
 import { FetchAllProducts } from "./actions/Products"
@@ -71,7 +82,7 @@ class App extends PureComponent {
       const {
         id,
         name,
-        links,
+        links: { www },
         priceRange: {
           selling: { high, low }
         },
@@ -81,12 +92,16 @@ class App extends PureComponent {
         swatches,
         messages,
         flags,
-        reviews
+        reviews: { recommendationCount, likelihood, reviewCount, averageRating, type }
       } = group
       return (
         <Col key={id} xs={12} lg={4} className="p-2">
           <BasicModal
-            modalTitle={name}
+            modalTitle={
+              <a href={www} target="_blank">
+                {name}
+              </a>
+            }
             ModalButton={
               <Card className="ProductGroupContainer">
                 <div className="ProductGroupImageContainer">
@@ -133,6 +148,7 @@ class App extends PureComponent {
         <Row tag="header" className="AppHeader">
           <Col tag="h3" xs={12} className="AppTitle">
             WILLIAMS SONOMA
+            <hr style={{ backgroundColor: "#f6e58d" }} />
           </Col>
           {this.renderProductGroups(groups)}
         </Row>

@@ -5,8 +5,7 @@ import {
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
-  CarouselCaption,
-  Media
+  CarouselCaption
 } from "reactstrap"
 import "./styles.css"
 
@@ -39,7 +38,7 @@ const BasicCarousel = ({ images }) => {
         onExited={() => setAnimating(false)}
       >
         <img src={item.src} alt={item.altText} height={item.height} width={item.width} />
-        <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+        <CarouselCaption captionHeader={item.captionHeader} captionText={item.captionText} />
       </CarouselItem>
     )
   })
@@ -59,7 +58,9 @@ BasicCarousel.propTypes = {
     PropTypes.shape({
       src: PropTypes.string.isRequired,
       altText: PropTypes.string,
-      caption: PropTypes.string,
+      captionHeader: PropTypes.string,
+      captionText: PropTypes.string,
+      href: PropTypes.string,
       height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     })
