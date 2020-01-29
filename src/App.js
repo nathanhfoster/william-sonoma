@@ -11,7 +11,8 @@ import {
   CardText,
   CardBody,
   CardTitle,
-  CardSubtitle
+  CardSubtitle,
+  Button
 } from "reactstrap"
 import BasicModal from "./components/BasicModal"
 import BasicCarousel from "./components/BasicCarousel"
@@ -98,7 +99,7 @@ class App extends PureComponent {
         <Col key={id} xs={12} lg={4} className="p-2">
           <BasicModal
             modalTitle={
-              <a href={www} target="_blank">
+              <a href={www} target="_blank" style={{ fontSize: 20 }}>
                 {name}
               </a>
             }
@@ -124,16 +125,21 @@ class App extends PureComponent {
               </Card>
             }
           >
-            <BasicCarousel
-              images={[{ src: href, altText: alt, height, width }].concat(
-                images.map(image => ({
-                  src: image.href,
-                  altText: image.alt,
-                  height: image.height,
-                  width: image.width
-                }))
-              )}
-            />
+            <div style={{ textAlign: "center" }}>
+              <BasicCarousel
+                images={[{ src: href, altText: alt, height, width }].concat(
+                  images.map(image => ({
+                    src: image.href,
+                    altText: image.alt,
+                    height: image.height,
+                    width: image.width
+                  }))
+                )}
+              />
+              <Button color="danger" style={{ backgroundColor: "#af1a31" }} className="mt-3">
+                Add To Cart
+              </Button>
+            </div>
           </BasicModal>
         </Col>
       )
