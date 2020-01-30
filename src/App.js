@@ -14,6 +14,7 @@ import {
   CardSubtitle,
   Button
 } from "reactstrap"
+import BasicSearchBar from "./components/BasicSearchBar"
 import BasicModal from "./components/BasicModal"
 import BasicCarousel from "./components/BasicCarousel"
 import { FetchAllProducts } from "./actions/Products"
@@ -34,6 +35,11 @@ const PRODUCT_GROUP_IMAGE_PROPS = PropTypes.shape({
 })
 
 class App extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = { searchValue: "" }
+  }
   static propTypes = {
     FetchAllProducts: PropTypes.func.isRequired,
     Products: PropTypes.shape({
@@ -78,6 +84,8 @@ class App extends PureComponent {
     FetchAllProducts()
   }
 
+  handleSearch = searchValue => this.setState({ searchValue })
+
   renderProductGroups = groups =>
     groups.map(group => {
       const {
@@ -96,8 +104,9 @@ class App extends PureComponent {
         reviews: { recommendationCount, likelihood, reviewCount, averageRating, type }
       } = group
       return (
-        <Col key={id} xs={12} lg={4} className="p-2">
+        <Col xs={12} lg={4} className="p-2">
           <BasicModal
+            key={id}
             modalTitle={
               <a href={www} target="_blank" style={{ fontSize: 20 }}>
                 {name}
@@ -149,15 +158,31 @@ class App extends PureComponent {
     const {
       Products: { id, name, categoryType, groups, totalPages, categories }
     } = this.props
+
+    const { searchValue } = this.state
+
+    const filteredGroups = groups.filter(g =>
+      JSON.stringify(g)
+        .toLowerCase()
+        .includes(searchValue.toLowerCase())
+    )
+
     return (
       <Container className="App mt-4 mb-4">
-        <Row tag="header" className="AppHeader">
-          <Col tag="h3" xs={12} className="AppTitle">
-            WILLIAMS SONOMA
-            <hr style={{ backgroundColor: "#f6e58d" }} />
-          </Col>
-          {this.renderProductGroups(groups)}
-        </Row>
+        <header className="AppHeader">
+          <Row>
+            <Col tag="h3" xs={12} className="AppTitle p-2">
+              WILLIAMS SONOMA
+              <hr style={{ backgroundColor: "#f6e58d" }} />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12} className="p-2">
+              <BasicSearchBar onSubmit={value => this.handleSearch(value)} />
+            </Col>
+          </Row>
+          <Row>{this.renderProductGroups(filteredGroups)}</Row>
+        </header>
       </Container>
     )
   }
