@@ -104,9 +104,8 @@ class App extends PureComponent {
         reviews: { recommendationCount, likelihood, reviewCount, averageRating, type }
       } = group
       return (
-        <Col xs={12} lg={4} className="p-2">
+        <Col key={id} xs={12} lg={4} className="p-2">
           <BasicModal
-            key={id}
             modalTitle={
               <a href={www} target="_blank" style={{ fontSize: 20 }}>
                 {name}

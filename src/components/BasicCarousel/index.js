@@ -1,15 +1,9 @@
 import React, { useState, memo } from "react"
 import PropTypes from "prop-types"
-import {
-  Carousel,
-  CarouselItem,
-  CarouselControl,
-  CarouselIndicators,
-  CarouselCaption
-} from "reactstrap"
+import { Carousel, CarouselItem, CarouselControl, CarouselIndicators, CarouselCaption } from "reactstrap"
 import "./styles.css"
 
-const BasicCarousel = ({ images }) => {
+const BasicCarousel = ({ images, autoPlay }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [animating, setAnimating] = useState(false)
 
@@ -44,7 +38,7 @@ const BasicCarousel = ({ images }) => {
   })
 
   return (
-    <Carousel activeIndex={activeIndex} next={next} previous={previous}>
+    <Carousel autoPlay={autoPlay} activeIndex={activeIndex} next={next} previous={previous}>
       <CarouselIndicators items={images} activeIndex={activeIndex} onClickHandler={goToIndex} />
       {slides}
       <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
@@ -64,7 +58,12 @@ BasicCarousel.propTypes = {
       height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     })
-  )
+  ),
+  autoPlay: PropTypes.bool.isRequired
+}
+
+BasicCarousel.defaultProps = {
+  autoPlay: true
 }
 
 export default memo(BasicCarousel)
