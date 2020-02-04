@@ -80,6 +80,15 @@ const App = ({
                 />
               </div>
             }
+            footer={
+              <Button
+                color="danger"
+                style={{ backgroundColor: "#af1a31" }}
+                className="mt-1"
+              >
+                Add To Cart
+              </Button>
+            }
           >
             <div style={{ textAlign: "center" }}>
               <BasicCarousel
@@ -99,13 +108,6 @@ const App = ({
                   }))
                 )}
               />
-              <Button
-                color="danger"
-                style={{ backgroundColor: "#af1a31" }}
-                className="mt-3"
-              >
-                Add To Cart
-              </Button>
             </div>
           </BasicModal>
         </Col>

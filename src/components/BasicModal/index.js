@@ -65,7 +65,7 @@ const BasicModal = ({
             <Fragment>
               <Button
                 className="mr-1"
-                color="primary"
+                color="success"
                 onClick={() => {
                   onSaveCallback && onSaveCallback()
                   toggle()
