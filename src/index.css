@@ -7,9 +7,17 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 a {
   color: #7f8c8d;
+}
+
+.Center {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

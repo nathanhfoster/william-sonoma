@@ -1,22 +1,11 @@
-import React, { PureComponent } from "react"
+import React, { useState, useEffect, memo } from "react"
 import PropTypes from "prop-types"
 import { connect as reduxConnect } from "react-redux"
-import {
-  Container,
-  Row,
-  Col,
-  Badge,
-  Card,
-  CardImg,
-  CardText,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  Button
-} from "reactstrap"
+import { Container, Row, Col, Button } from "reactstrap"
 import BasicSearchBar from "./components/BasicSearchBar"
 import BasicModal from "./components/BasicModal"
 import BasicCarousel from "./components/BasicCarousel"
+import ProductCard from "./components/ProductCard"
 import { FetchAllProducts } from "./actions/Products"
 import "./App.css"
 
@@ -34,108 +23,74 @@ const PRODUCT_GROUP_IMAGE_PROPS = PropTypes.shape({
   height: PropTypes.number.isRequired
 })
 
-class App extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = { searchValue: "" }
-  }
-  static propTypes = {
-    FetchAllProducts: PropTypes.func.isRequired,
-    Products: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string,
-      categoryType: PropTypes.string,
-      groups: PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.string,
-          name: PropTypes.string,
-          links: PropTypes.shape({ www: PropTypes.string }),
-          priceRange: PropTypes.shape({
-            selling: PropTypes.shape({ high: PropTypes.number, low: PropTypes.number })
-          }),
-          thumbnail: PRODUCT_GROUP_IMAGE_PROPS,
-          hero: PRODUCT_GROUP_IMAGE_PROPS,
-          images: PropTypes.arrayOf(PRODUCT_GROUP_IMAGE_PROPS),
-          swatches: PropTypes.array,
-          messages: PropTypes.array,
-          flags: PropTypes.arrayOf(
-            PropTypes.shape({ bopisSuppress: PropTypes.bool, rank: PropTypes.number, id: PropTypes.string })
-          ),
-          reviews: PropTypes.shape({
-            recommendationCount: PropTypes.number,
-            likelihood: PropTypes.number,
-            reviewCount: PropTypes.number,
-            averageRating: PropTypes.number,
-            id: PropTypes.string,
-            type: PropTypes.string
-          })
-        })
-      ).isRequired,
-      totalPages: PropTypes.number.isRequired,
-      categories: PropTypes.array.isRequired
-    }).isRequired
-  }
-
-  static defaultProps = {}
-
-  componentDidMount() {
-    const { FetchAllProducts } = this.props
+const App = ({
+  Products: { id, name, categoryType, groups, totalPages, categories },
+  FetchAllProducts
+}) => {
+  useEffect(() => {
     FetchAllProducts()
-  }
+  }, [])
 
-  handleSearch = searchValue => this.setState({ searchValue })
+  const [searchValue, setSearch] = useState("")
 
-  renderProductGroups = groups =>
+  const filteredGroups = groups.filter(g =>
+    JSON.stringify(g)
+      .toLowerCase()
+      .includes(searchValue.toLowerCase())
+  )
+
+  const handleSearch = searchValue => setSearch(searchValue)
+
+  const renderProductGroups = groups =>
     groups.map(group => {
       const {
         id,
         name,
         links: { www },
-        priceRange: {
-          selling: { high, low }
-        },
-        thumbnail: { size, meta, alt, rel, width, href, height },
+        priceRange: { selling },
+        thumbnail,
         hero,
         images,
         swatches,
         messages,
         flags,
-        reviews: { recommendationCount, likelihood, reviewCount, averageRating, type }
+        reviews: {
+          recommendationCount,
+          likelihood,
+          reviewCount,
+          averageRating,
+          type
+        }
       } = group
       return (
         <Col key={id} xs={12} lg={4} className="p-2">
           <BasicModal
-            modalTitle={
+            title={
               <a href={www} target="_blank" style={{ fontSize: 20 }}>
                 {name}
               </a>
             }
-            ModalButton={
-              <Card className="ProductGroupContainer">
-                <div className="ProductGroupImageContainer">
-                  <CardImg
-                    top
-                    size={size}
-                    height={height}
-                    width={width}
-                    src={href}
-                    alt={alt}
-                    className="ProductGroupImage"
-                  />
-                </div>
-
-                <CardBody>
-                  <CardTitle className="ProductGroupTitle">{name}</CardTitle>
-                  <CardSubtitle>{`$${low} – $${high}`}</CardSubtitle>
-                  <CardText>{messages}</CardText>
-                </CardBody>
-              </Card>
+            button={
+              <div>
+                <ProductCard
+                  {...hero}
+                  {...selling}
+                  name={name}
+                  messages={messages}
+                />
+              </div>
             }
           >
             <div style={{ textAlign: "center" }}>
               <BasicCarousel
-                images={[{ src: href, altText: alt, height, width }].concat(
+                images={[
+                  {
+                    src: hero.href,
+                    altText: hero.alt,
+                    height: hero.height,
+                    width: hero.width
+                  }
+                ].concat(
                   images.map(image => ({
                     src: image.href,
                     altText: image.alt,
@@ -144,7 +99,11 @@ class App extends PureComponent {
                   }))
                 )}
               />
-              <Button color="danger" style={{ backgroundColor: "#af1a31" }} className="mt-3">
+              <Button
+                color="danger"
+                style={{ backgroundColor: "#af1a31" }}
+                className="mt-3"
+              >
                 Add To Cart
               </Button>
             </div>
@@ -153,38 +112,71 @@ class App extends PureComponent {
       )
     })
 
-  render() {
-    const {
-      Products: { id, name, categoryType, groups, totalPages, categories }
-    } = this.props
-
-    const { searchValue } = this.state
-
-    const filteredGroups = groups.filter(g =>
-      JSON.stringify(g)
-        .toLowerCase()
-        .includes(searchValue.toLowerCase())
-    )
-
-    return (
-      <Container className="App mt-4 mb-4">
-        <header className="AppHeader">
-          <Row>
-            <Col tag="h3" xs={12} className="AppTitle p-2">
-              WILLIAMS SONOMA
-              <hr style={{ backgroundColor: "#f6e58d" }} />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} className="p-2">
-              <BasicSearchBar onSubmit={value => this.handleSearch(value)} />
-            </Col>
-          </Row>
-          <Row>{this.renderProductGroups(filteredGroups)}</Row>
-        </header>
-      </Container>
-    )
-  }
+  return (
+    <Container className="App mt-4 mb-4">
+      <header className="AppHeader">
+        <Row>
+          <Col tag="h3" xs={12} className="AppTitle p-2">
+            WILLIAMS SONOMA
+            <hr style={{ backgroundColor: "#f6e58d" }} />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} className="p-2">
+            <BasicSearchBar
+              placeholder="Search products..."
+              onSubmit={handleSearch}
+            />
+          </Col>
+        </Row>
+        <Row>{renderProductGroups(filteredGroups)}</Row>
+      </header>
+    </Container>
+  )
 }
 
-export default reduxConnect(mapStateToProps, mapDispatchToProps)(App)
+App.propTypes = {
+  FetchAllProducts: PropTypes.func.isRequired,
+  Products: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    categoryType: PropTypes.string,
+    groups: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        links: PropTypes.shape({ www: PropTypes.string }),
+        priceRange: PropTypes.shape({
+          selling: PropTypes.shape({
+            high: PropTypes.number,
+            low: PropTypes.number
+          })
+        }),
+        thumbnail: PRODUCT_GROUP_IMAGE_PROPS,
+        hero: PRODUCT_GROUP_IMAGE_PROPS,
+        images: PropTypes.arrayOf(PRODUCT_GROUP_IMAGE_PROPS),
+        swatches: PropTypes.array,
+        messages: PropTypes.array,
+        flags: PropTypes.arrayOf(
+          PropTypes.shape({
+            bopisSuppress: PropTypes.bool,
+            rank: PropTypes.number,
+            id: PropTypes.string
+          })
+        ),
+        reviews: PropTypes.shape({
+          recommendationCount: PropTypes.number,
+          likelihood: PropTypes.number,
+          reviewCount: PropTypes.number,
+          averageRating: PropTypes.number,
+          id: PropTypes.string,
+          type: PropTypes.string
+        })
+      })
+    ).isRequired,
+    totalPages: PropTypes.number.isRequired,
+    categories: PropTypes.array.isRequired
+  }).isRequired
+}
+
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(memo(App))

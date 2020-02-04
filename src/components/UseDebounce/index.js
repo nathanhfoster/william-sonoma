@@ -1,42 +1,24 @@
-import { Component } from 'react'
-import PropTypes from 'prop-types'
+import { useEffect, memo } from "react"
+import PropTypes from "prop-types"
 
-class UseDebounce extends Component {
-  constructor(props) {
-    super(props)
-    this.debounce = null
-  }
+const UseDebounce = ({ value, delay, onChangeCallback }) => {
+  useEffect(() => {
+    const debounce = setTimeout(() => onChangeCallback(value), delay)
 
-  static propTypes = {
-    onChangeCallback: PropTypes.func.isRequired,
-    value: PropTypes.any,
-    delay: PropTypes.number
-  }
+    return () => clearTimeout(debounce)
+  }, [value])
 
-  static defaultProps = {
-    delay: 400
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const previousValue = this.props.value
-    const nextValue = nextProps.value
-    const valueChanged = previousValue !== nextValue
-    return valueChanged
-  }
-
-  getSnapshotBeforeUpdate() {
-    clearTimeout(this.debounce)
-    return null
-  }
-
-  componentDidUpdate() {
-    const { onChangeCallback, value, delay } = this.props
-
-    this.debounce = setTimeout(() => onChangeCallback(value), delay)
-  }
-
-  render() {
-    return null
-  }
+  return null
 }
-export default UseDebounce
+
+UseDebounce.propTypes = {
+  onChangeCallback: PropTypes.func.isRequired,
+  value: PropTypes.any,
+  delay: PropTypes.number
+}
+
+UseDebounce.defaultProps = {
+  delay: 400
+}
+
+export default memo(UseDebounce)
